@@ -1,2 +1,2 @@
-# student-service
-CRUD for student
+# studentEntity-service
+CRUD for studentEntity

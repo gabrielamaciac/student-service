@@ -1,7 +1,10 @@
 package com.learning.student.studentservice.persistance.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,15 +15,17 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.UUID;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "student")
-@Setter
-@Getter
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class StudentEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @Column(name = "studentJSON")
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
     private String studentJson;
     @Column(name = "valid")
     private boolean isValid;

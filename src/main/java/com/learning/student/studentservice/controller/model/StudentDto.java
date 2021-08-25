@@ -12,11 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 public class StudentDto {
+    private String id;
     private String firstName;
     private String lastName;
     private String cnp;
     private String dateOfBirth;
     private AddressDto address;
     private List<GradeDto> grades;
+    private boolean isValid;
 }
 

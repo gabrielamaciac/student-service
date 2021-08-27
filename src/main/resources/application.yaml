@@ -1,7 +1,8 @@
 queue:
   name: ${QUEUE_NAME}
 server:
-  contextPath: /api
+  servlet:
+    contextPath: /api
   port: 8081
 spring:
   datasource:

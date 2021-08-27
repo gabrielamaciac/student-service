@@ -5,37 +5,36 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.student.studentservice.persistance.model.Student;
 import com.learning.student.studentservice.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class QueueConsumer {
 
+    @Autowired
     StudentService studentService;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     public QueueConsumer(StudentService studentService) {
         this.studentService = studentService;
     }
 
+    @RabbitListener(queues = "studentqueue")
     public void receiveMessage(String message) {
-        log.info("Received (String): " + message);
         processMessage(message);
-    }
-
-    //message listener annotation
-    public void receiveMessage(byte[] message) {
-        String strMessage = new String(message);
-        log.info("Received (No String): " + strMessage);
-        processMessage(strMessage);
     }
 
     private void processMessage(String message) {
         try {
-            Student student = new ObjectMapper().readValue(message, Student.class);
+            log.info("Processing message: " + message);
+            Student student = objectMapper.readValue(message, Student.class);
             studentService.create(student);
+            log.info("Student created from queue.");
         } catch (JsonProcessingException e) {
-            log.info("Error processing received json: " + e.getMessage());
+            log.error("Error processing received json: " + e);
         }
-
     }
 }

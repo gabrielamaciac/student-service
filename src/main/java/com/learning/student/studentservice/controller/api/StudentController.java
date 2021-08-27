@@ -34,13 +34,13 @@ public class StudentController implements StudentApi {
     @PostMapping("")
     public ResponseEntity<StudentDto> create(@RequestBody StudentDto studentDto) {
         Student response = studentFacade.create(StudentMapper.convertStudentDtoToStudent(studentDto));
-        log.info("Json of the created student: " + response);
+        log.info("Student created with id: " + response.getId());
         return new ResponseEntity<>(StudentMapper.convertStudentToStudentDto(response), HttpStatus.CREATED);
     }
 
     @Override
     @GetMapping("")
-    //pageable
+    //TODO make this pageable
     public ResponseEntity<List<StudentDto>> getAll() {
         List<Student> response = studentFacade.getAll();
         log.info(response.size() + " students found.");

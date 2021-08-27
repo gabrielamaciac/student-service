@@ -5,14 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
-public class Grade implements Serializable {
+public class Grade {
     private String subject;
     private String dateReceived;
-    private int mark;
+    private List<Integer> marks;
 }

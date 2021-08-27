@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
-public class Student implements Serializable {
+public class Student {
     private String id;
     private String firstName;
     private String lastName;
@@ -21,5 +20,14 @@ public class Student implements Serializable {
     private Address address;
     private List<Grade> grades;
     private boolean isValid;
+
+    public Student(String firstName, String lastName, String cnp, String dateOfBirth, Address address, List<Grade> grades) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.cnp = cnp;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.grades = grades;
+    }
 }
 

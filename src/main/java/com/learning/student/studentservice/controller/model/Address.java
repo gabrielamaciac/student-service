@@ -5,15 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class GradeDto {
-    //(discipline, date of grade, grade)
-    private String subject;
-    private String dateReceived;
-    private List<Integer> marks;
+public class Address {
+    //(street, number, city, country)
+    private String street;
+    private String number;
+    private String city;
+    private String country;
 }

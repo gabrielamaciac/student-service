@@ -1,6 +1,7 @@
 package com.learning.student.studentservice.service;
 
-import com.learning.student.studentservice.persistance.model.Student;
+import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.persistance.model.StudentEntity;
 
 import java.util.List;
 
@@ -9,9 +10,9 @@ public interface StudentService {
 
     List<Student> getAll();
 
-    Student create(Student student);
+    Student create(StudentEntity studentEntity);
 
-    void update(String id, Student student);
+    void update(String id, StudentEntity studentEntity);
 
     void delete(String id);
 }

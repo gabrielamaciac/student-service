@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Address {
+public class AddressEntity {
     private String street;
     private String number;
     private String city;

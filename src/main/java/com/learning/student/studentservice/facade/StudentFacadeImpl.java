@@ -1,6 +1,7 @@
 package com.learning.student.studentservice.facade;
 
-import com.learning.student.studentservice.persistance.model.Student;
+import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.service.StudentService;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,8 @@ public class StudentFacadeImpl implements StudentFacade {
     }
 
     @Override
-    public Student create(Student student) {
-        return studentService.create(student);
+    public Student create(StudentEntity studentEntity) {
+        return studentService.create(studentEntity);
     }
 
     @Override
@@ -30,8 +31,8 @@ public class StudentFacadeImpl implements StudentFacade {
     }
 
     @Override
-    public void update(String id, Student student) {
-        studentService.update(id, student);
+    public void update(String id, StudentEntity studentEntity) {
+        studentService.update(id, studentEntity);
     }
 
     @Override

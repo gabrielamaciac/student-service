@@ -9,10 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AddressDto {
-    //(street, number, city, country)
-    private String street;
-    private String number;
-    private String city;
-    private String country;
+public class Grade {
+    //(discipline, date of grade, grade)
+    private String subject;
+    private String dateReceived;
+    private Double mark;
 }

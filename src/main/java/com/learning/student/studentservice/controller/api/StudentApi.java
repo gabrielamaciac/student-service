@@ -1,7 +1,6 @@
 package com.learning.student.studentservice.controller.api;
 
-import com.learning.student.studentservice.controller.model.StudentDto;
-import com.learning.student.studentservice.persistance.model.Student;
+import com.learning.student.studentservice.controller.model.Student;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,17 +13,17 @@ import java.util.List;
 
 public interface StudentApi {
     @PostMapping("")
-    ResponseEntity<StudentDto> create(@RequestBody StudentDto studentDto);
+    ResponseEntity<Student> create(@RequestBody Student student);
 
     @GetMapping("")
         //pageable
-    ResponseEntity<List<StudentDto>> getAll();
+    ResponseEntity<List<Student>> getAll();
 
     @GetMapping("/{id}")
     ResponseEntity<Student> getById(@PathVariable String id);
 
     @PutMapping("/{id}")
-    ResponseEntity<Void> updateById(@PathVariable String id, @RequestBody StudentDto studentDto);
+    ResponseEntity<Void> updateById(@PathVariable String id, @RequestBody Student student);
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteById(@PathVariable String id);

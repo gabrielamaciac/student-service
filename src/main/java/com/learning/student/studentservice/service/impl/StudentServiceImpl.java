@@ -1,7 +1,8 @@
 package com.learning.student.studentservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.learning.student.studentservice.persistance.model.Student;
+import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.persistance.model.StudentDetailsEntity;
 import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.persistance.repository.StudentRepository;
 import com.learning.student.studentservice.service.StudentService;
@@ -28,45 +29,37 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getById(String id) {
-        Optional<StudentEntity> studentEntity = studentRepository.findById(UUID.fromString(id));
-        if (studentEntity.isPresent()) {
-            return addMetadataToStudent(studentEntity.get());
+        Optional<StudentDetailsEntity> studentDetailsEntity = studentRepository.findById(UUID.fromString(id));
+        if (studentDetailsEntity.isPresent()) {
+            return addMetadataToStudent(studentDetailsEntity.get());
         } else {
             throw new NoSuchElementException("No student found with the given id.");
         }
     }
 
-    private Student addMetadataToStudent(StudentEntity studentEntity) {
-        Student student = StudentMapper.convertJsonToStudent(studentEntity);
-        student.setId(studentEntity.getId().toString());
-        student.setValid(studentEntity.isValid());
-        return student;
-    }
-
     @Override
     public List<Student> getAll() {
-        List<StudentEntity> studentEntities = studentRepository.findAll();
-        return studentEntities.stream()
+        List<StudentDetailsEntity> studentDetails = studentRepository.findAll();
+        return studentDetails.stream()
                 .map(this::addMetadataToStudent)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Student create(Student student) {
-        StudentEntity studentEntity = new StudentEntity();
-        studentEntity.setStudentJson(StudentMapper.convertStudentToJson(student));
-        studentEntity.setValid(false);
-        StudentEntity savedStudent = studentRepository.save(studentEntity);
-        return addMetadataToStudent(savedStudent);
+    public Student create(StudentEntity studentEntity) {
+        StudentDetailsEntity studentDetailsEntity = new StudentDetailsEntity();
+        studentDetailsEntity.setStudentJson(StudentMapper.convertStudentEntityToJson(studentEntity));
+        studentDetailsEntity.setValid(false);
+        StudentDetailsEntity savedDetails = studentRepository.save(studentDetailsEntity);
+        return addMetadataToStudent(savedDetails);
     }
 
-    //TODO use the same method
     @Override
-    public void update(String id, Student student) {
-        Optional<StudentEntity> studentEntity = studentRepository.findById(UUID.fromString(id));
-        if (studentEntity.isPresent()) {
-            StudentEntity existingStudent = studentEntity.get();
-            String newStudent = StudentMapper.convertStudentToJson(student);
+    public void update(String id, StudentEntity studentEntity) {
+        Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
+        if (studentDetails.isPresent()) {
+            StudentDetailsEntity existingStudent = studentDetails.get();
+            String newStudent = StudentMapper.convertStudentEntityToJson(studentEntity);
             existingStudent.setStudentJson(newStudent);
             studentRepository.save(existingStudent);
         } else {
@@ -76,12 +69,18 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void delete(String id) {
-        Optional<StudentEntity> studentEntity = studentRepository.findById(UUID.fromString(id));
-        if (studentEntity.isPresent()) {
-            studentRepository.delete(studentEntity.get());
+        Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
+        if (studentDetails.isPresent()) {
+            studentRepository.delete(studentDetails.get());
         } else {
             throw new NoSuchElementException("No student found with the given id.");
         }
     }
 
+    private Student addMetadataToStudent(StudentDetailsEntity studentDetailsEntity) {
+        Student student = StudentMapper.convertJsonToStudent(studentDetailsEntity);
+        student.setId(studentDetailsEntity.getId().toString());
+        student.setValid(studentDetailsEntity.isValid());
+        return student;
+    }
 }

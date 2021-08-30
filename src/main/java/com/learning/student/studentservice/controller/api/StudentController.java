@@ -1,8 +1,7 @@
 package com.learning.student.studentservice.controller.api;
 
-import com.learning.student.studentservice.controller.model.StudentDto;
+import com.learning.student.studentservice.controller.model.Student;
 import com.learning.student.studentservice.facade.StudentFacade;
-import com.learning.student.studentservice.persistance.model.Student;
 import com.learning.student.studentservice.service.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -32,20 +30,19 @@ public class StudentController implements StudentApi {
 
     @Override
     @PostMapping("")
-    public ResponseEntity<StudentDto> create(@RequestBody StudentDto studentDto) {
-        Student response = studentFacade.create(StudentMapper.convertStudentDtoToStudent(studentDto));
+    public ResponseEntity<Student> create(@RequestBody Student student) {
+        Student response = studentFacade.create(StudentMapper.convertStudentToStudentEntity(student));
         log.info("Student created with id: " + response.getId());
-        return new ResponseEntity<>(StudentMapper.convertStudentToStudentDto(response), HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Override
     @GetMapping("")
     //TODO make this pageable
-    public ResponseEntity<List<StudentDto>> getAll() {
+    public ResponseEntity<List<Student>> getAll() {
         List<Student> response = studentFacade.getAll();
         log.info(response.size() + " students found.");
-        List<StudentDto> students = response.stream().map(StudentMapper::convertStudentToStudentDto).collect(Collectors.toList());
-        return new ResponseEntity<>(students, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
@@ -58,8 +55,8 @@ public class StudentController implements StudentApi {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateById(@PathVariable String id, @RequestBody StudentDto studentDto) {
-        studentFacade.update(id, StudentMapper.convertStudentDtoToStudent(studentDto));
+    public ResponseEntity<Void> updateById(@PathVariable String id, @RequestBody Student student) {
+        studentFacade.update(id, StudentMapper.convertStudentToStudentEntity(student));
         log.info("Student with id " + id + " was updated.");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

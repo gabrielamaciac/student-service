@@ -2,8 +2,9 @@ package com.learning.student.studentservice.service.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.learning.student.studentservice.controller.model.StudentDto;
-import com.learning.student.studentservice.persistance.model.Student;
+import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.integration.model.StudentMessage;
+import com.learning.student.studentservice.persistance.model.StudentDetailsEntity;
 import com.learning.student.studentservice.persistance.model.StudentEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -16,28 +17,36 @@ public class StudentMapper {
     private StudentMapper() {
     }
 
-    public static StudentDto convertStudentToStudentDto(Student student) {
-        return modelMapper.map(student, StudentDto.class);
+    public static Student convertStudentEntityToStudent(StudentEntity studentEntity) {
+        return modelMapper.map(studentEntity, Student.class);
     }
 
-    public static Student convertStudentDtoToStudent(StudentDto studentDto) {
-        return modelMapper.map(studentDto, Student.class);
+    public static StudentEntity convertStudentToStudentEntity(Student student) {
+        return modelMapper.map(student, StudentEntity.class);
     }
 
-    public static Student convertJsonToStudent(StudentEntity studentEntity) {
+    public static StudentMessage convertStudentEntityToStudentMessage(StudentEntity studentEntity) {
+        return modelMapper.map(studentEntity, StudentMessage.class);
+    }
+
+    public static StudentEntity convertStudentMessageToStudentEntity(StudentMessage studentMessage) {
+        return modelMapper.map(studentMessage, StudentEntity.class);
+    }
+
+    public static String convertStudentEntityToJson(StudentEntity studentEntity) {
         try {
-            return objectMapper.readValue(studentEntity.getStudentJson(), Student.class);
+            return objectMapper.writeValueAsString(studentEntity);
         } catch (JsonProcessingException e) {
-            log.info("Error converting json to Student object: " + e.getMessage());
+            log.info("Error converting StudentEntity object to json: " + e.getMessage());
         }
         return null;
     }
 
-    public static String convertStudentToJson(Student student) {
+    public static Student convertJsonToStudent(StudentDetailsEntity studentDetailsEntity) {
         try {
-            return objectMapper.writeValueAsString(student);
+            return objectMapper.readValue(studentDetailsEntity.getStudentJson(), Student.class);
         } catch (JsonProcessingException e) {
-            log.info("Error converting Student object to json: " + e.getMessage());
+            log.info("Error converting json to StudentEntity object: " + e.getMessage());
         }
         return null;
     }

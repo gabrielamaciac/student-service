@@ -1,32 +1,22 @@
 package com.learning.student.studentservice.persistance.model;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
-import java.util.UUID;
+import java.util.List;
 
-@Data
 @NoArgsConstructor
-@Entity
-@Table(name = "student")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-public class StudentEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
-    @Type(type = "jsonb")
-    @Column(columnDefinition = "jsonb")
-    private String studentJson;
-    @Column(name = "valid")
-    private boolean isValid;
+@Getter
+@Setter
+@AllArgsConstructor
+public class StudentEntity {
+    private String firstName;
+    private String lastName;
+    private String cnp;
+    private String dateOfBirth;
+    private AddressEntity address;
+    private List<GradeEntity> grades;
 }
+

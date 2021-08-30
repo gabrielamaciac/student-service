@@ -8,11 +8,11 @@
         <version>2.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.learning.studentEntity</groupId>
+    <groupId>com.learning.studentDetailsEntity</groupId>
     <artifactId>studentservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Student Service</name>
-    <description>CRUD operations for studentEntity</description>
+    <description>CRUD operations for studentDetailsEntity</description>
     <properties>
         <java.version>11</java.version>
     </properties>

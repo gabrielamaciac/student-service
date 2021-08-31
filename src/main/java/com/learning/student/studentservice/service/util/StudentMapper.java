@@ -17,16 +17,8 @@ public class StudentMapper {
     private StudentMapper() {
     }
 
-    public static Student convertStudentEntityToStudent(StudentEntity studentEntity) {
-        return modelMapper.map(studentEntity, Student.class);
-    }
-
     public static StudentEntity convertStudentToStudentEntity(Student student) {
         return modelMapper.map(student, StudentEntity.class);
-    }
-
-    public static StudentMessage convertStudentEntityToStudentMessage(StudentEntity studentEntity) {
-        return modelMapper.map(studentEntity, StudentMessage.class);
     }
 
     public static StudentEntity convertStudentMessageToStudentEntity(StudentMessage studentMessage) {

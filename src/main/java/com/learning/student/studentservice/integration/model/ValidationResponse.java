@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-public class GradeMessage {
-    private String subject;
-    private List<MarkMessage> marks;
+public class ValidationResponse {
+    private String studentId;
+    private boolean isValid;
 }

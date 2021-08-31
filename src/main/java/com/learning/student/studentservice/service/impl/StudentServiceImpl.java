@@ -2,6 +2,7 @@ package com.learning.student.studentservice.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.integration.queue.ValidationServiceSender;
 import com.learning.student.studentservice.persistance.model.StudentDetailsEntity;
 import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.persistance.repository.StudentRepository;
@@ -21,10 +22,12 @@ import java.util.stream.Collectors;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
+    private final ValidationServiceSender validationServiceSender;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public StudentServiceImpl(final StudentRepository studentRepository) {
+    public StudentServiceImpl(final StudentRepository studentRepository, ValidationServiceSender validationServiceSender) {
         this.studentRepository = studentRepository;
+        this.validationServiceSender = validationServiceSender;
     }
 
     @Override
@@ -50,8 +53,13 @@ public class StudentServiceImpl implements StudentService {
         StudentDetailsEntity studentDetailsEntity = new StudentDetailsEntity();
         studentDetailsEntity.setStudentJson(StudentMapper.convertStudentEntityToJson(studentEntity));
         studentDetailsEntity.setValid(false);
+        //save the student
         StudentDetailsEntity savedDetails = studentRepository.save(studentDetailsEntity);
-        return addMetadataToStudent(savedDetails);
+        //add id and valid fields
+        Student savedStudent = addMetadataToStudent(savedDetails);
+        //send to validation
+        validationServiceSender.validate(savedStudent);
+        return savedStudent;
     }
 
     @Override

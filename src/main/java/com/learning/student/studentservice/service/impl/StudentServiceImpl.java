@@ -7,8 +7,11 @@ import com.learning.student.studentservice.persistance.model.StudentDetailsEntit
 import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.persistance.repository.StudentRepository;
 import com.learning.student.studentservice.service.StudentService;
-import com.learning.student.studentservice.service.util.StudentMapper;
+import com.learning.student.studentservice.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,8 +44,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getAll() {
-        List<StudentDetailsEntity> studentDetails = studentRepository.findAll();
+    public List<Student> getAll(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<StudentDetailsEntity> pagedResult = studentRepository.findAll(pageable);
+        List<StudentDetailsEntity> studentDetails = pagedResult.toList();
         return studentDetails.stream()
                 .map(this::addMetadataToStudent)
                 .collect(Collectors.toList());
@@ -82,6 +87,18 @@ public class StudentServiceImpl implements StudentService {
             studentRepository.delete(studentDetails.get());
         } else {
             throw new NoSuchElementException("No student found with the given id.");
+        }
+    }
+
+    public void updateIsValidFlag(String id, boolean flag) {
+        Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
+        if (studentDetails.isPresent()) {
+            StudentDetailsEntity studentDetailsEntity = studentDetails.get();
+            studentDetailsEntity.setValid(flag);
+            studentRepository.save(studentDetailsEntity);
+        } else {
+            // else simply don't update anything
+            log.info("updateIsValidFlag: student not found. Update not performed.");
         }
     }
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface StudentApi {
 
     @GetMapping("")
         //pageable
-    ResponseEntity<List<Student>> getAll();
+    ResponseEntity<List<Student>> getAll(@RequestParam int pageNo, @RequestParam int pageSize);
 
     @GetMapping("/{id}")
     ResponseEntity<Student> getById(@PathVariable String id);

@@ -34,6 +34,10 @@ public class ValidationResponseConsumer {
             log.info("Processing message: " + message);
             ValidationResponse validationResponse = objectMapper.readValue(message, ValidationResponse.class);
             log.info("ValidationResponse received: isValid " + validationResponse.isValid());
+            if (validationResponse.isValid()) {
+                studentService.updateIsValidFlag(validationResponse.getStudentId(), validationResponse.isValid());
+                log.info("Updated student with id: " + validationResponse.getStudentId());
+            }
         } catch (JsonProcessingException e) {
             log.error("Error processing received json: " + e);
         }

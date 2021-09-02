@@ -26,8 +26,8 @@ public class StudentFacadeImpl implements StudentFacade {
     }
 
     @Override
-    public List<Student> getAll() {
-        return studentService.getAll();
+    public List<Student> getAll(int pageNo, int pageSize) {
+        return studentService.getAll(pageNo, pageSize);
     }
 
     @Override

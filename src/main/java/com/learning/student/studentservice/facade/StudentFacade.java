@@ -10,7 +10,7 @@ public interface StudentFacade {
 
     Student getById(String id);
 
-    List<Student> getAll();
+    List<Student> getAll(int pageNo, int pageSize);
 
     void update(String id, StudentEntity studentEntity);
 

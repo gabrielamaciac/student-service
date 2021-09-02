@@ -1,4 +1,4 @@
-package com.learning.student.studentservice.service.util;
+package com.learning.student.studentservice.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

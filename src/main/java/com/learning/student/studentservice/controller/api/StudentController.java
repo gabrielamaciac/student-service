@@ -2,7 +2,7 @@ package com.learning.student.studentservice.controller.api;
 
 import com.learning.student.studentservice.controller.model.Student;
 import com.learning.student.studentservice.facade.StudentFacade;
-import com.learning.student.studentservice.service.util.StudentMapper;
+import com.learning.student.studentservice.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,9 +39,8 @@ public class StudentController implements StudentApi {
 
     @Override
     @GetMapping("")
-    //TODO make this pageable
-    public ResponseEntity<List<Student>> getAll() {
-        List<Student> response = studentFacade.getAll();
+    public ResponseEntity<List<Student>> getAll(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
+        List<Student> response = studentFacade.getAll(pageNo, pageSize);
         log.info(response.size() + " students found.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

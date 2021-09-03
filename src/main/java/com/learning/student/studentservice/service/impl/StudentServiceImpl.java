@@ -1,6 +1,5 @@
 package com.learning.student.studentservice.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.student.studentservice.controller.model.Student;
 import com.learning.student.studentservice.integration.queue.ValidationServiceSender;
 import com.learning.student.studentservice.persistance.model.StudentDetailsEntity;
@@ -26,7 +25,6 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     private final ValidationServiceSender validationServiceSender;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     public StudentServiceImpl(final StudentRepository studentRepository, ValidationServiceSender validationServiceSender) {
         this.studentRepository = studentRepository;

@@ -7,9 +7,10 @@ spring:
     continue-on-error: true
     initialization-mode: always
     initialize: true
-    password: ${POSTGRES_PWD}
+    username: postgres
+    password: admin
     url: jdbc:postgresql://localhost:5432/student
-    username: ${POSTGRES_USER}
+
   jpa:
     hibernate:
       ddl-auto: update

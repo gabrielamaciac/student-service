@@ -49,7 +49,7 @@ public class StudentController implements StudentApi {
     @GetMapping("/{id}")
     public ResponseEntity<Student> getById(@PathVariable String id) {
         Student response = studentFacade.getById(id);
-        log.info("Student found: " + response);
+        log.info("Student found: " + response.getFirstName() + " " + response.getLastName());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

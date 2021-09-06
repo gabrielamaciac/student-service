@@ -8,14 +8,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.NoSuchElementException;
-
 @ControllerAdvice
 @Slf4j
-public class NoSuchElementExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(NoSuchElementException.class)
-    protected ResponseEntity<Object> handleConflict(final NoSuchElementException ex, final WebRequest request) {
-        log.error("NoSuchElementExceptionHandler caught exception: " + ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+public class IllegalStateExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(IllegalStateException.class)
+    protected ResponseEntity<Object> handleConflict(final IllegalStateException ex, final WebRequest request) {
+        log.error("IllegalStateExceptionHandler caught exception: " + ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 }

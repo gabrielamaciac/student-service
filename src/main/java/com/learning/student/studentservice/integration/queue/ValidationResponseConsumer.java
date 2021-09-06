@@ -36,7 +36,7 @@ public class ValidationResponseConsumer {
             log.info("ValidationResponse received: isValid " + validationResponse.isValid());
             if (validationResponse.isValid()) {
                 studentService.updateIsValidFlag(validationResponse.getStudentId(), validationResponse.isValid());
-                log.info("Updated student with id: " + validationResponse.getStudentId());
+                log.info("Updated flag for student with id: " + validationResponse.getStudentId());
             }
         } catch (JsonProcessingException e) {
             log.error("Error processing received json: " + e);

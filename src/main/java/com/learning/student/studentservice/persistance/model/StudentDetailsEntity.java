@@ -1,6 +1,7 @@
 package com.learning.student.studentservice.persistance.model;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -19,11 +20,12 @@ import java.util.UUID;
 @Entity
 @Table(name = "student")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@TypeDef(name = "json", typeClass = JsonType.class)
 public class StudentDetailsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @Type(type = "jsonb")
+    @Type(type = "json")
     @Column(columnDefinition = "jsonb")
     private String studentJson;
     @Column(name = "valid")

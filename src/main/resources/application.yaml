@@ -26,3 +26,5 @@ spring:
     validationrouting: validation-routing-key
     responsequeue: validation-response-queue
     responserouting: validation-response-key
+    searchqueue: search-queue
+    searchrouting: search-routing

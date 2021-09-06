@@ -1,6 +1,10 @@
 package com.learning.student.studentservice.service.impl;
 
 import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.integration.model.search.OperationType;
+import com.learning.student.studentservice.integration.model.search.SearchPayload;
+import com.learning.student.studentservice.integration.model.search.StudentSearch;
+import com.learning.student.studentservice.integration.queue.SearchServiceSender;
 import com.learning.student.studentservice.integration.queue.ValidationServiceSender;
 import com.learning.student.studentservice.persistance.model.StudentDetailsEntity;
 import com.learning.student.studentservice.persistance.model.StudentEntity;
@@ -10,7 +14,6 @@ import com.learning.student.studentservice.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,10 +28,12 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     private final ValidationServiceSender validationServiceSender;
+    private final SearchServiceSender searchServiceSender;
 
-    public StudentServiceImpl(final StudentRepository studentRepository, ValidationServiceSender validationServiceSender) {
+    public StudentServiceImpl(final StudentRepository studentRepository, ValidationServiceSender validationServiceSender, SearchServiceSender searchServiceSender) {
         this.studentRepository = studentRepository;
         this.validationServiceSender = validationServiceSender;
+        this.searchServiceSender = searchServiceSender;
     }
 
     @Override
@@ -43,36 +48,47 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> getAll(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<StudentDetailsEntity> pagedResult = studentRepository.findAll(pageable);
-        List<StudentDetailsEntity> studentDetails = pagedResult.toList();
-        return studentDetails.stream()
+        Page<StudentDetailsEntity> pagedResult = studentRepository.findAll(PageRequest.of(pageNo, pageSize));
+        return pagedResult.toList().stream()
                 .map(this::addMetadataToStudent)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Student create(StudentEntity studentEntity) {
+        //if it exists, stop
+        List<StudentDetailsEntity> studentDetails = studentRepository.findByCnp(studentEntity.getCnp());
+        if (!studentDetails.isEmpty()) {
+            throw new IllegalStateException("Student with the same CNP already exists.");
+        }
+        // create the new student
         StudentDetailsEntity studentDetailsEntity = new StudentDetailsEntity();
         studentDetailsEntity.setStudentJson(StudentMapper.convertStudentEntityToJson(studentEntity));
         studentDetailsEntity.setValid(false);
         //save the student
         StudentDetailsEntity savedDetails = studentRepository.save(studentDetailsEntity);
-        //add id and valid fields
+        //add metadata obtained after save
         Student savedStudent = addMetadataToStudent(savedDetails);
         //send to validation
         validationServiceSender.validate(savedStudent);
+        //send to search service
+        indexStudent(OperationType.CREATE, savedStudent);
         return savedStudent;
     }
 
     @Override
     public void update(String id, StudentEntity studentEntity) {
         Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
+        List<StudentDetailsEntity> existingStudents = studentRepository.findByCnp(studentEntity.getCnp());
         if (studentDetails.isPresent()) {
             StudentDetailsEntity existingStudent = studentDetails.get();
             String newStudent = StudentMapper.convertStudentEntityToJson(studentEntity);
             existingStudent.setStudentJson(newStudent);
-            studentRepository.save(existingStudent);
+            // update the student from the db
+            StudentDetailsEntity savedEntity = studentRepository.save(existingStudent);
+            // update the student from solr
+            Student savedStudent = addMetadataToStudent(savedEntity);
+            indexStudent(OperationType.UPDATE, savedStudent);
         } else {
             throw new NoSuchElementException("No student found to update.");
         }
@@ -82,7 +98,11 @@ public class StudentServiceImpl implements StudentService {
     public void delete(String id) {
         Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
         if (studentDetails.isPresent()) {
+            // delete from DB
             studentRepository.delete(studentDetails.get());
+            // delete from solr
+            Student studentToDelete = StudentMapper.convertJsonToStudent(studentDetails.get());
+            indexStudent(OperationType.DELETE, studentToDelete);
         } else {
             throw new NoSuchElementException("No student found with the given id.");
         }
@@ -93,10 +113,14 @@ public class StudentServiceImpl implements StudentService {
         if (studentDetails.isPresent()) {
             StudentDetailsEntity studentDetailsEntity = studentDetails.get();
             studentDetailsEntity.setValid(flag);
-            studentRepository.save(studentDetailsEntity);
+            // update isValid from db
+            StudentDetailsEntity savedEntity = studentRepository.save(studentDetailsEntity);
+            // update isValid from solr
+            Student savedStudent = addMetadataToStudent(savedEntity);
+            indexStudent(OperationType.UPDATE, savedStudent);
         } else {
             // else simply don't update anything
-            log.info("updateIsValidFlag: student not found. Update not performed.");
+            log.info("updateIsValidFlag: student not found. Update was not performed.");
         }
     }
 
@@ -105,5 +129,12 @@ public class StudentServiceImpl implements StudentService {
         student.setId(studentDetailsEntity.getId().toString());
         student.setValid(studentDetailsEntity.isValid());
         return student;
+    }
+
+    private void indexStudent(OperationType operationType, Student savedStudent) {
+        StudentSearch studentSearch = new StudentSearch(savedStudent.getId(), savedStudent.getFirstName(),
+                savedStudent.getLastName(), savedStudent.getCnp(), savedStudent.isValid());
+        SearchPayload searchPayload = new SearchPayload(operationType, studentSearch);
+        searchServiceSender.sendPayload(searchPayload);
     }
 }

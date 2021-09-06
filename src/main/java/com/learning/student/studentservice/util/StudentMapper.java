@@ -25,6 +25,10 @@ public class StudentMapper {
         return modelMapper.map(studentMessage, StudentEntity.class);
     }
 
+    public static StudentMessage convertStudentToStudentMessage(Student student) {
+        return modelMapper.map(student, StudentMessage.class);
+    }
+
     public static String convertStudentEntityToJson(StudentEntity studentEntity) {
         try {
             return objectMapper.writeValueAsString(studentEntity);

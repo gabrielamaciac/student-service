@@ -30,6 +30,11 @@ public class RabbitConfiguration {
     @Value("${spring.rabbitmq.responserouting}")
     private String responseRouting;
 
+    @Value("${spring.rabbitmq.searchqueue}")
+    private String searchQueue;
+    @Value("${spring.rabbitmq.searchrouting}")
+    private String searchRoutingKey;
+
     @Bean
     Queue studentQueue() {
         return new Queue(studentQueue, false);
@@ -43,6 +48,11 @@ public class RabbitConfiguration {
     @Bean
     Queue responseQueue() {
         return new Queue(responseQueue, false);
+    }
+
+    @Bean
+    Queue searchQueue() {
+        return new Queue(searchQueue, false);
     }
 
     @Bean
@@ -63,6 +73,11 @@ public class RabbitConfiguration {
     @Bean
     public Binding responseBinding(Queue responseQueue, DirectExchange exchange) {
         return BindingBuilder.bind(responseQueue).to(exchange).with(responseRouting);
+    }
+
+    @Bean
+    public Binding searchBinding(Queue searchQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(searchQueue).to(exchange).with(searchRoutingKey);
     }
 
     @Bean

@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class ValidationResponseConsumer {
+public class ValidationResponseQueueConsumer {
     @Autowired
     StudentService studentService;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    public ValidationResponseConsumer(StudentService studentService) {
+    public ValidationResponseQueueConsumer(StudentService studentService) {
         this.studentService = studentService;
     }
 

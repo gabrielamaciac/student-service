@@ -39,7 +39,8 @@ public class StudentController implements StudentApi {
 
     @Override
     @GetMapping("")
-    public ResponseEntity<List<Student>> getAll(@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
+    public ResponseEntity<List<Student>> getAll(@RequestParam(defaultValue = "0") int pageNo,
+                                                @RequestParam(defaultValue = "10") int pageSize) {
         List<Student> response = studentFacade.getAll(pageNo, pageSize);
         log.info(response.size() + " students found.");
         return new ResponseEntity<>(response, HttpStatus.OK);

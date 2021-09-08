@@ -39,11 +39,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student getById(String id) {
         Optional<StudentDetailsEntity> studentDetailsEntity = studentRepository.findById(UUID.fromString(id));
-        if (studentDetailsEntity.isPresent()) {
-            return addMetadataToStudent(studentDetailsEntity.get());
-        } else {
-            throw new NoSuchElementException("No student found with the given id.");
-        }
+        return studentDetailsEntity.map(this::addMetadataToStudent)
+                .orElseThrow(() -> new NoSuchElementException("No student found with the given id."));
     }
 
     @Override
@@ -79,7 +76,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void update(String id, StudentEntity studentEntity) {
         Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
-        List<StudentDetailsEntity> existingStudents = studentRepository.findByCnp(studentEntity.getCnp());
         if (studentDetails.isPresent()) {
             StudentDetailsEntity existingStudent = studentDetails.get();
             String newStudent = StudentMapper.convertStudentEntityToJson(studentEntity);

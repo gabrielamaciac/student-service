@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-public class ValidationResponseQueueConsumerTest {
+class ValidationResponseQueueConsumerTest {
 
     private StudentService studentService;
     private ValidationResponseQueueConsumer validationResponseQueueConsumer;

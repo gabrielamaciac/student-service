@@ -17,7 +17,6 @@ public interface StudentApi {
     ResponseEntity<Student> create(@RequestBody Student student);
 
     @GetMapping("")
-        //pageable
     ResponseEntity<List<Student>> getAll(@RequestParam int pageNo, @RequestParam int pageSize);
 
     @GetMapping("/{id}")

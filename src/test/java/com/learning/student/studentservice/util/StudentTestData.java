@@ -10,6 +10,9 @@ import com.learning.student.studentservice.integration.model.AddressMessage;
 import com.learning.student.studentservice.integration.model.GradeMessage;
 import com.learning.student.studentservice.integration.model.MarkMessage;
 import com.learning.student.studentservice.integration.model.StudentMessage;
+import com.learning.student.studentservice.integration.model.search.OperationType;
+import com.learning.student.studentservice.integration.model.search.SearchPayload;
+import com.learning.student.studentservice.integration.model.search.StudentSearch;
 import com.learning.student.studentservice.persistance.model.AddressEntity;
 import com.learning.student.studentservice.persistance.model.GradeEntity;
 import com.learning.student.studentservice.persistance.model.MarkEntity;
@@ -63,71 +66,29 @@ public class StudentTestData {
     }
 
     public static StudentEntity getStudentEntity() {
-        StudentEntity student = new StudentEntity();
-        student.setFirstName(TEST_FIRST_NAME);
-        student.setLastName(TEST_LAST_NAME);
-        student.setCnp(TEST_CNP);
-        student.setDateOfBirth(DATE_OF_BIRTH);
-        AddressEntity address = new AddressEntity();
-        address.setCity(TEST_CITY);
-        address.setCountry(TEST_COUNTRY);
-        address.setNumber(TEST_NUMBER);
-        address.setStreet(TEST_STREET);
-        student.setAddress(address);
-        GradeEntity gradeEntity = new GradeEntity();
-        gradeEntity.setSubject(TEST_SUBJECT);
-        MarkEntity markEntity = new MarkEntity();
-        markEntity.setDateReceived(DATE_RECEIVED);
-        markEntity.setMark(10.0);
-        gradeEntity.setMarks(Collections.singletonList(markEntity));
-        student.setGrades(Collections.singletonList(gradeEntity));
-        return student;
+        AddressEntity address = new AddressEntity(TEST_CITY, TEST_COUNTRY, TEST_NUMBER, TEST_STREET);
+        MarkEntity mark = new MarkEntity(DATE_RECEIVED, 10.0);
+        GradeEntity grade = new GradeEntity(TEST_SUBJECT, Collections.singletonList(mark));
+        return new StudentEntity(TEST_FIRST_NAME, TEST_LAST_NAME, TEST_CNP, DATE_OF_BIRTH, address, Collections.singletonList(grade));
     }
 
     public static StudentMessage getStudentMessage() {
-        StudentMessage student = new StudentMessage();
-        student.setFirstName(TEST_FIRST_NAME);
-        student.setLastName(TEST_LAST_NAME);
-        student.setCnp(TEST_CNP);
-        student.setDateOfBirth(DATE_OF_BIRTH);
-        AddressMessage address = new AddressMessage();
-        address.setCity(TEST_CITY);
-        address.setCountry(TEST_COUNTRY);
-        address.setNumber(TEST_NUMBER);
-        address.setStreet(TEST_STREET);
-        student.setAddress(address);
-        GradeMessage gradeMessage = new GradeMessage();
-        gradeMessage.setSubject(TEST_SUBJECT);
-        MarkMessage markMessage = new MarkMessage();
-        markMessage.setDateReceived(DATE_RECEIVED);
-        markMessage.setMark(10.0);
-        gradeMessage.setMarks(Collections.singletonList(markMessage));
-        student.setGrades(Collections.singletonList(gradeMessage));
-        return student;
+        AddressMessage address = new AddressMessage(TEST_CITY, TEST_COUNTRY, TEST_NUMBER, TEST_STREET);
+        MarkMessage mark = new MarkMessage(DATE_RECEIVED, 10.0);
+        GradeMessage grade = new GradeMessage(TEST_SUBJECT, Collections.singletonList(mark));
+        return new StudentMessage(TEST_FIRST_NAME, TEST_LAST_NAME, TEST_CNP, DATE_OF_BIRTH, address, Collections.singletonList(grade));
     }
 
     public static Student getStudent() {
-        Student student = new Student();
-        student.setId(STUDENT_ID);
-        student.setFirstName(TEST_FIRST_NAME);
-        student.setLastName(TEST_LAST_NAME);
-        student.setCnp(TEST_CNP);
-        student.setDateOfBirth(DATE_OF_BIRTH);
-        Address address = new Address();
-        address.setCity(TEST_CITY);
-        address.setCountry(TEST_COUNTRY);
-        address.setNumber(TEST_NUMBER);
-        address.setStreet(TEST_STREET);
-        student.setAddress(address);
-        Grade grade = new Grade();
-        grade.setSubject(TEST_SUBJECT);
-        Mark mark = new Mark();
-        mark.setDateReceived(DATE_RECEIVED);
-        mark.setMark(10.0);
-        grade.setMarks(Collections.singletonList(mark));
-        student.setGrades(Collections.singletonList(grade));
-        student.setValid(true);
-        return student;
+        Address address = new Address(TEST_CITY, TEST_COUNTRY, TEST_NUMBER, TEST_STREET);
+        Mark mark = new Mark(DATE_RECEIVED, 10.0);
+        Grade grade = new Grade(TEST_SUBJECT, Collections.singletonList(mark));
+        return new Student(STUDENT_ID, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_CNP, DATE_OF_BIRTH, address, Collections.singletonList(grade), true);
+    }
+
+    public static SearchPayload getSearchPayload() {
+        StudentSearch studentSearch = new StudentSearch(STUDENT_ID, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_CNP, true);
+        return new SearchPayload(OperationType.CREATE, studentSearch);
     }
 
     public static Student getStudentFromJson() {

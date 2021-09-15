@@ -26,13 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * Test for {@link StudentService}
  */
-public class StudentServiceTest {
+class StudentServiceTest {
 
     private final StudentDetailsEntity studentDetailsEntity = StudentTestData.getStudentDetailsEntity();
     private final StudentEntity studentEntity = StudentTestData.getStudentEntity();
@@ -195,5 +196,18 @@ public class StudentServiceTest {
         verify(studentRepository).save(captor.capture());
         assertEquals(studentDetailsEntity.getId(), captor.getValue().getId());
         assertEquals(studentDetailsEntity.isValid(), captor.getValue().isValid());
+    }
+
+    @Test
+    void updateIsValidFlagIsNotPerformed() {
+        // Given
+        when(studentRepository.findById(StudentTestData.STUDENT_UUID)).thenReturn(Optional.empty());
+
+        // When
+        studentService.updateIsValidFlag(StudentTestData.STUDENT_ID, true);
+
+        // Then
+        ArgumentCaptor<StudentDetailsEntity> captor = ArgumentCaptor.forClass(StudentDetailsEntity.class);
+        verify(studentRepository, never()).save(captor.capture());
     }
 }

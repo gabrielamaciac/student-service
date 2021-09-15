@@ -10,7 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class StudentQueueConsumerTest {
+class StudentQueueConsumerTest {
     private StudentService studentService;
     private StudentQueueConsumer studentQueueConsumer;
 

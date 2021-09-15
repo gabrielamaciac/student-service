@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 /**
  * Test {@link StudentFacade}
  */
-public class StudentFacadeTest {
+class StudentFacadeTest {
     private StudentService studentService;
     private StudentFacade studentFacade;
 

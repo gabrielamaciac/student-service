@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-public class StudentControllerTest {
+class StudentControllerTest {
     private MockMvc mvc;
     private StudentFacade studentFacade;
     private StudentController studentController;
@@ -46,7 +46,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void createStudentReturns201StatusCode() throws Exception {
+    void createStudentReturns201StatusCode() throws Exception {
         // given
         given(studentFacade.create(any(StudentEntity.class))).willReturn(expectedStudent);
 
@@ -60,7 +60,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void createStudentReturns409StatusCode() throws Exception {
+    void createStudentReturns409StatusCode() throws Exception {
         // given
         doThrow(new IllegalStateException()).when(studentFacade).create(any(StudentEntity.class));
 
@@ -88,7 +88,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void getStudentByIdReturns404StatusCode() throws Exception {
+    void getStudentByIdReturns404StatusCode() throws Exception {
         // given
         given(studentFacade.getById(StudentTestData.STUDENT_ID)).willThrow(new NoSuchElementException());
 
@@ -118,7 +118,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void updateStudentReturns204StatusCode() throws Exception {
+    void updateStudentReturns204StatusCode() throws Exception {
         // when
         MockHttpServletResponse response = mvc.perform(put("/student/" + StudentTestData.STUDENT_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(StudentTestData.STUDENT_JSON))
@@ -129,7 +129,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void updateStudentReturns404StatusCode() throws Exception {
+    void updateStudentReturns404StatusCode() throws Exception {
         // given
         doThrow(new NoSuchElementException()).when(studentFacade).update(any(String.class), any(StudentEntity.class));
 
@@ -143,7 +143,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void deleteStudentReturns204StatusCode() throws Exception {
+    void deleteStudentReturns204StatusCode() throws Exception {
         // when
         MockHttpServletResponse response = mvc.perform(delete("/student/" + StudentTestData.STUDENT_ID)
                 .accept(MediaType.APPLICATION_JSON))
@@ -154,7 +154,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void deleteStudentReturns404StatusCode() throws Exception {
+    void deleteStudentReturns404StatusCode() throws Exception {
         // given
         doThrow(new NoSuchElementException()).when(studentFacade).delete(any(String.class));
 

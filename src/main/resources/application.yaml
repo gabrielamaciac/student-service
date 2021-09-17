@@ -9,7 +9,7 @@ spring:
     initialize: true
     username: postgres
     password: admin
-    url: jdbc:postgresql://localhost:5432/student
+    url: jdbc:postgresql://localhost:5432/students
 
   jpa:
     hibernate:

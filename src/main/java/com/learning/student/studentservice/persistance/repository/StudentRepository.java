@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface StudentRepository extends PagingAndSortingRepository<StudentDetailsEntity, UUID> {
-    @Query(value = "SELECT * FROM student WHERE student_json->>'cnp' = :cnp", nativeQuery = true)
+    @Query(value = "SELECT * FROM students WHERE student_json->>'cnp' = :cnp", nativeQuery = true)
     List<StudentDetailsEntity> findByCnp(String cnp);
 }

@@ -15,7 +15,7 @@ public class IllegalStateExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     protected ResponseEntity<Object> handleConflict(final IllegalStateException ex, final WebRequest request) {
-        log.error("IllegalStateExceptionHandler caught exception: " + ex);
+        log.error("IllegalStateExceptionHandler caught exception: ", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 }

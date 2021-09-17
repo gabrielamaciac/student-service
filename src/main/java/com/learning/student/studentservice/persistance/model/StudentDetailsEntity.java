@@ -20,7 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "student")
+@Table(name = "students")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @TypeDef(name = "json", typeClass = JsonType.class)
 public class StudentDetailsEntity {
@@ -28,7 +28,7 @@ public class StudentDetailsEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     @Type(type = "json")
-    @Column(columnDefinition = "jsonb")
+    @Column(columnDefinition = "jsonb", name = "student_json")
     private String studentJson;
     @Column(name = "valid")
     private boolean isValid;

@@ -17,7 +17,7 @@ public class NoSuchElementExceptionHandler extends ResponseEntityExceptionHandle
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ResponseEntity<Object> handleConflict(final NoSuchElementException ex, final WebRequest request) {
-        log.error("NoSuchElementExceptionHandler caught exception: " + ex);
+        log.error("NoSuchElementExceptionHandler caught exception: ", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

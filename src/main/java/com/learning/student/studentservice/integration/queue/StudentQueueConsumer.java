@@ -37,7 +37,7 @@ public class StudentQueueConsumer {
             studentService.create(studentEntity);
             log.info("Student created from queue.");
         } catch (JsonProcessingException e) {
-            log.error("Error processing received json: " + e);
+            log.error("Error processing received json: ", e);
         }
     }
 }

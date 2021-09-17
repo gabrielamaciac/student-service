@@ -39,7 +39,7 @@ public class ValidationResponseQueueConsumer {
                 log.info("Updated flag for student with id: " + validationResponse.getStudentId());
             }
         } catch (JsonProcessingException e) {
-            log.error("Error processing received json: " + e);
+            log.error("Error processing received json: ", e);
         }
     }
 }

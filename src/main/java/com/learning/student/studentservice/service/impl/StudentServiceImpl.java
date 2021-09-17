@@ -128,8 +128,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private void indexStudent(OperationType operationType, Student savedStudent) {
-        StudentSearch studentSearch = new StudentSearch(savedStudent.getId(), savedStudent.getFirstName(),
-                savedStudent.getLastName(), savedStudent.getCnp(), savedStudent.isValid());
+        StudentSearch studentSearch = new StudentSearch(savedStudent.getId(),
+                savedStudent.getFirstName(),
+                savedStudent.getLastName(),
+                savedStudent.getCnp(),
+                savedStudent.isValid());
         SearchPayload searchPayload = new SearchPayload(operationType, studentSearch);
         searchServiceSender.sendPayload(searchPayload);
     }

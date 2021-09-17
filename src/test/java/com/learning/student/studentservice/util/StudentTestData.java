@@ -23,14 +23,25 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class StudentTestData {
-
     public static final ObjectMapper objectMapper = new ObjectMapper();
     public static final String STUDENT_ID = "4ce2dddb-438a-4305-b7e3-9981fda59355";
     public static final UUID STUDENT_UUID = UUID.fromString(STUDENT_ID);
+    public static final String TEST_FIRST_NAME = "Test FirstName";
+    public static final String TEST_LAST_NAME = "Test LastName";
+    public static final String DATE_OF_BIRTH = "1987-12-10";
+    public static final String TEST_CITY = "Test City";
+    public static final String TEST_COUNTRY = "Test Country";
+    public static final String TEST_NUMBER = "Test Number";
+    public static final String TEST_STREET = "Test Street";
+    public static final String TEST_SUBJECT = "Test Subject";
+    public static final String DATE_RECEIVED = "2020-03-12";
+
+    public static final String TEST_CNP = UUID.randomUUID().toString();
+
     public static final String STUDENT_JSON = "{\n" +
             "    \"firstName\": \"Test FirstName\",\n" +
             "    \"lastName\": \"Test LastName\",\n" +
-            "    \"cnp\": \"Test CNP\",\n" +
+            "    \"cnp\": \"" + TEST_CNP + "\",\n" +
             "    \"dateOfBirth\": \"1987-12-10\",\n" +
             "    \"address\": {\n" +
             "        \"street\": \"Test Street\",\n" +
@@ -50,16 +61,30 @@ public class StudentTestData {
             "        }\n" +
             "    ]\n" +
             "}";
-    public static final String TEST_FIRST_NAME = "Test FirstName";
-    public static final String TEST_LAST_NAME = "Test LastName";
-    public static final String TEST_CNP = "Test CNP";
-    public static final String DATE_OF_BIRTH = "1987-12-10";
-    public static final String TEST_CITY = "Test City";
-    public static final String TEST_COUNTRY = "Test Country";
-    public static final String TEST_NUMBER = "Test Number";
-    public static final String TEST_STREET = "Test Street";
-    public static final String TEST_SUBJECT = "Test Subject";
-    public static final String DATE_RECEIVED = "2020-03-12";
+
+    public static final String STUDENT_JSON_UPDATED = "{\n" +
+            "    \"firstName\": \"Test FirstName Updated\",\n" +
+            "    \"lastName\": \"Test LastName\",\n" +
+            "    \"cnp\": \"" + TEST_CNP + "\",\n" +
+            "    \"dateOfBirth\": \"1987-12-10\",\n" +
+            "    \"address\": {\n" +
+            "        \"street\": \"Test Street\",\n" +
+            "        \"number\": \"Test Number\",\n" +
+            "        \"city\": \"Test City\",\n" +
+            "        \"country\": \"Test Country\"\n" +
+            "    },\n" +
+            "    \"grades\": [\n" +
+            "        {\n" +
+            "            \"subject\": \"Test Subject\",\n" +
+            "            \"marks\": [\n" +
+            "                {\n" +
+            "                    \"dateReceived\": \"2020-03-12\",\n" +
+            "                    \"mark\": 10.0\n" +
+            "                }\n" +
+            "            ]\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}";
 
     public static StudentDetailsEntity getStudentDetailsEntity() {
         return new StudentDetailsEntity(STUDENT_UUID, STUDENT_JSON, false);
@@ -99,5 +124,31 @@ public class StudentTestData {
         } catch (JsonProcessingException e) {
             return null;
         }
+    }
+
+    public static String getStudentJson(String cnp) {
+        return "{\n" +
+                "    \"firstName\": \"Test FirstName\",\n" +
+                "    \"lastName\": \"Test LastName\",\n" +
+                "    \"cnp\": \"" + cnp + "\",\n" +
+                "    \"dateOfBirth\": \"1987-12-10\",\n" +
+                "    \"address\": {\n" +
+                "        \"street\": \"Test Street\",\n" +
+                "        \"number\": \"Test Number\",\n" +
+                "        \"city\": \"Test City\",\n" +
+                "        \"country\": \"Test Country\"\n" +
+                "    },\n" +
+                "    \"grades\": [\n" +
+                "        {\n" +
+                "            \"subject\": \"Test Subject\",\n" +
+                "            \"marks\": [\n" +
+                "                {\n" +
+                "                    \"dateReceived\": \"2020-03-12\",\n" +
+                "                    \"mark\": 10.0\n" +
+                "                }\n" +
+                "            ]\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
     }
 }

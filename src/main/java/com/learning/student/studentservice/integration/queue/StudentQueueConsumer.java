@@ -1,7 +1,5 @@
 package com.learning.student.studentservice.integration.queue;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.student.studentservice.integration.model.StudentMessage;
 import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.service.StudentService;
@@ -17,8 +15,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class StudentQueueConsumer {
 
-    StudentService studentService;
-    ObjectMapper objectMapper = new ObjectMapper();
+    private final StudentService studentService;
 
     public StudentQueueConsumer(StudentService studentService) {
         this.studentService = studentService;
@@ -30,14 +27,10 @@ public class StudentQueueConsumer {
     }
 
     private void processMessage(String message) {
-        try {
-            log.info("Processing message: " + message);
-            StudentMessage studentMessage = objectMapper.readValue(message, StudentMessage.class);
-            StudentEntity studentEntity = StudentMapper.convertStudentMessageToStudentEntity(studentMessage);
-            studentService.create(studentEntity);
-            log.info("Student created from queue.");
-        } catch (JsonProcessingException e) {
-            log.error("Error processing received json: ", e);
-        }
+        log.info("Processing message: " + message);
+        StudentMessage studentMessage = StudentMapper.readValue(message, StudentMessage.class);
+        // TODO optional?
+        studentService.create(StudentMapper.map(studentMessage, StudentEntity.class));
+        log.info("Student created from queue.");
     }
 }

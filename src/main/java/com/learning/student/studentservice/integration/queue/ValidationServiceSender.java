@@ -1,6 +1,6 @@
 package com.learning.student.studentservice.integration.queue;
 
-import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.integration.model.FullStudentMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,7 @@ public class ValidationServiceSender {
         this.jsonRabbitTemplate = jsonRabbitTemplate;
     }
 
-    public void validate(Student student) {
+    public void validate(FullStudentMessage student) {
         jsonRabbitTemplate.convertAndSend(exchange, routingKey, student);
         log.info("Student sent to validation: " + student.getFirstName());
     }

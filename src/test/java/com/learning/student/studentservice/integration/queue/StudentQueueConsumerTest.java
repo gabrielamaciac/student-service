@@ -22,8 +22,10 @@ class StudentQueueConsumerTest {
 
     @Test
     void processMessageIsSuccessful() {
+        // when
         studentQueueConsumer.receiveMessage(StudentTestData.STUDENT_JSON);
 
+        // then
         verify(studentService).create(any(StudentEntity.class));
     }
 }

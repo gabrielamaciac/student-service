@@ -15,10 +15,8 @@
     <description>CRUD operations for student</description>
     <properties>
         <java.version>11</java.version>
-        <sonar.coverage.jacoco.xmlReportPaths>${basedir}/target/site/jacoco-aggregate/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.jacoco.reportPath>${basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
-        <sonar.coverage.exclusions>**/*Configuration.*, **/*Application.*</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>**/*Configuration.*, **/*Application.*, **/model/**, **/exception/**, **/util/**
+        </sonar.coverage.exclusions>
     </properties>
     <dependencies>
         <!-- Spring boot -->
@@ -158,6 +156,9 @@
                     <excludes>
                         <exclude>**/*Configuration.*</exclude>
                         <exclude>**/*Application.*</exclude>
+                        <exclude>**/model/**</exclude>
+                        <exclude>**/exception/**</exclude>
+                        <exclude>**/util/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

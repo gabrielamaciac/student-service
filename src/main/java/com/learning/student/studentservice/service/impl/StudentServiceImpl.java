@@ -1,6 +1,7 @@
 package com.learning.student.studentservice.service.impl;
 
 import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.integration.model.FullStudentMessage;
 import com.learning.student.studentservice.integration.model.search.OperationType;
 import com.learning.student.studentservice.integration.model.search.SearchPayload;
 import com.learning.student.studentservice.integration.model.search.StudentSearch;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -60,14 +62,14 @@ public class StudentServiceImpl implements StudentService {
         }
         // create the new student
         StudentDetailsEntity studentDetailsEntity = new StudentDetailsEntity();
-        studentDetailsEntity.setStudentJson(StudentMapper.convertStudentEntityToJson(studentEntity));
+        studentDetailsEntity.setStudentJson(StudentMapper.writeValue(studentEntity));
         studentDetailsEntity.setValid(false);
         //save the student
         StudentDetailsEntity savedDetails = studentRepository.save(studentDetailsEntity);
         //add metadata obtained after save
         Student savedStudent = addMetadataToStudent(savedDetails);
         //send to validation
-        validationServiceSender.validate(savedStudent);
+        validationServiceSender.validate(StudentMapper.map(savedStudent, FullStudentMessage.class));
         //send to search service
         indexStudent(OperationType.CREATE, savedStudent);
         return savedStudent;
@@ -78,7 +80,7 @@ public class StudentServiceImpl implements StudentService {
         Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
         if (studentDetails.isPresent()) {
             StudentDetailsEntity existingStudent = studentDetails.get();
-            String newStudent = StudentMapper.convertStudentEntityToJson(studentEntity);
+            String newStudent = StudentMapper.writeValue(studentEntity);
             existingStudent.setStudentJson(newStudent);
             // update the student from the db
             StudentDetailsEntity savedEntity = studentRepository.save(existingStudent);
@@ -97,8 +99,8 @@ public class StudentServiceImpl implements StudentService {
             // delete from DB
             studentRepository.delete(studentDetails.get());
             // delete from solr
-            Student studentToDelete = StudentMapper.convertJsonToStudent(studentDetails.get());
-            indexStudent(OperationType.DELETE, studentToDelete);
+            Student studentToDelete = StudentMapper.readValue(studentDetails.get().getStudentJson(), Student.class);
+            indexStudent(OperationType.DELETE, Objects.requireNonNull(studentToDelete));
         } else {
             throw new NoSuchElementException("No student found with the given id.");
         }
@@ -121,7 +123,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private Student addMetadataToStudent(StudentDetailsEntity studentDetailsEntity) {
-        Student student = StudentMapper.convertJsonToStudent(studentDetailsEntity);
+        Student student = StudentMapper.readValue(studentDetailsEntity.getStudentJson(), Student.class);
         student.setId(studentDetailsEntity.getId().toString());
         student.setValid(studentDetailsEntity.isValid());
         return student;

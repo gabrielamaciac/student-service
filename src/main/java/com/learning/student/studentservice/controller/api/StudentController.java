@@ -2,16 +2,13 @@ package com.learning.student.studentservice.controller.api;
 
 import com.learning.student.studentservice.controller.model.Student;
 import com.learning.student.studentservice.facade.StudentFacade;
+import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.util.StudentMapper;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,8 +26,8 @@ public class StudentController implements StudentApi {
     }
 
     @Override
-    public ResponseEntity<Student> create(@Parameter(description = "student object to be created") @RequestBody Student student) {
-        Student createdStudent = studentFacade.create(StudentMapper.convertStudentToStudentEntity(student));
+    public ResponseEntity<Student> create(Student student) {
+        Student createdStudent = studentFacade.create(StudentMapper.map(student, StudentEntity.class));
         log.info("Student created with id: " + createdStudent.getId());
         // Add self link
         createdStudent.add(linkTo(StudentController.class)
@@ -40,8 +37,7 @@ public class StudentController implements StudentApi {
     }
 
     @Override
-    public ResponseEntity<CollectionModel<Student>> getAll(@RequestParam(defaultValue = "0") int pageNo,
-                                                           @RequestParam(defaultValue = "10") int pageSize) {
+    public ResponseEntity<CollectionModel<Student>> getAll(int pageNo, int pageSize) {
         List<Student> response = studentFacade.getAll(pageNo, pageSize);
         log.info(response.size() + " students found.");
         //Add self link to each student
@@ -57,7 +53,7 @@ public class StudentController implements StudentApi {
     }
 
     @Override
-    public ResponseEntity<Student> getById(@Parameter(description = "id of student to be searched") @PathVariable String id) {
+    public ResponseEntity<Student> getById(String id) {
         Student student = studentFacade.getById(id);
         log.info("Student found: " + student.getFirstName() + " " + student.getLastName());
         // Add self link
@@ -68,15 +64,14 @@ public class StudentController implements StudentApi {
     }
 
     @Override
-    public ResponseEntity<Void> updateById(@Parameter(description = "id of student to be updated") @PathVariable String id,
-                                           @RequestBody Student student) {
-        studentFacade.update(id, StudentMapper.convertStudentToStudentEntity(student));
+    public ResponseEntity<Void> updateById(String id, Student student) {
+        studentFacade.update(id, StudentMapper.map(student, StudentEntity.class));
         log.info("Student with id " + id + " was updated.");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
-    public ResponseEntity<Void> deleteById(@Parameter(description = "id of student to be deleted") @PathVariable String id) {
+    public ResponseEntity<Void> deleteById(String id) {
         studentFacade.delete(id);
         log.info("Student deleted.");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

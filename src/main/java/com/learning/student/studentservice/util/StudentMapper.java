@@ -2,10 +2,6 @@ package com.learning.student.studentservice.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.learning.student.studentservice.controller.model.Student;
-import com.learning.student.studentservice.integration.model.StudentMessage;
-import com.learning.student.studentservice.persistance.model.StudentDetailsEntity;
-import com.learning.student.studentservice.persistance.model.StudentEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 
@@ -17,32 +13,24 @@ public class StudentMapper {
     private StudentMapper() {
     }
 
-    public static StudentEntity convertStudentToStudentEntity(Student student) {
-        return modelMapper.map(student, StudentEntity.class);
+    public static <T, O> T map(final O object, final Class<T> type) {
+        return modelMapper.map(object, type);
     }
 
-    public static StudentEntity convertStudentMessageToStudentEntity(StudentMessage studentMessage) {
-        return modelMapper.map(studentMessage, StudentEntity.class);
-    }
-
-    public static StudentMessage convertStudentToStudentMessage(Student student) {
-        return modelMapper.map(student, StudentMessage.class);
-    }
-
-    public static String convertStudentEntityToJson(StudentEntity studentEntity) {
+    public static <T> String writeValue(final T object) {
         try {
-            return objectMapper.writeValueAsString(studentEntity);
+            return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            log.info("Error converting StudentEntity object to json: " + e.getMessage());
+            log.error("Error converting {} object to json: ", object.getClass(), e);
         }
         return null;
     }
 
-    public static Student convertJsonToStudent(StudentDetailsEntity studentDetailsEntity) {
+    public static <T> T readValue(final String json, final Class<T> type) {
         try {
-            return objectMapper.readValue(studentDetailsEntity.getStudentJson(), Student.class);
+            return objectMapper.readValue(json, type);
         } catch (JsonProcessingException e) {
-            log.info("Error converting json to StudentEntity object: " + e.getMessage());
+            log.error("Error converting json to {}.", type, e);
         }
         return null;
     }

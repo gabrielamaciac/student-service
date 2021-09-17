@@ -1,6 +1,7 @@
 package com.learning.student.studentservice.integration.queue;
 
-import com.learning.student.studentservice.controller.model.Student;
+import com.learning.student.studentservice.integration.model.FullStudentMessage;
+import com.learning.student.studentservice.util.StudentMapper;
 import com.learning.student.studentservice.util.StudentTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,10 +12,8 @@ import static org.mockito.Mockito.verify;
 
 class ValidationServiceSenderTest {
 
-    AmqpTemplate jsonRabbitTemplate;
-    ValidationServiceSender validationServiceSender;
-
-    Student student = StudentTestData.getStudent();
+    private AmqpTemplate jsonRabbitTemplate;
+    private ValidationServiceSender validationServiceSender;
 
     @BeforeEach
     void setUp() {
@@ -24,7 +23,8 @@ class ValidationServiceSenderTest {
 
     @Test
     void studentIsConvertedAndSentToValidation() {
-        validationServiceSender.validate(student);
-        verify(jsonRabbitTemplate).convertAndSend(null, null, student);
+        FullStudentMessage fullStudentMessage = StudentMapper.map(StudentTestData.getStudent(), FullStudentMessage.class);
+        validationServiceSender.validate(fullStudentMessage);
+        verify(jsonRabbitTemplate).convertAndSend(null, null, fullStudentMessage);
     }
 }

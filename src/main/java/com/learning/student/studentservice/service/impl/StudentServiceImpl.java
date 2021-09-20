@@ -13,6 +13,7 @@ import com.learning.student.studentservice.persistance.repository.StudentReposit
 import com.learning.student.studentservice.service.StudentService;
 import com.learning.student.studentservice.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,14 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final ValidationServiceSender validationServiceSender;
     private final SearchServiceSender searchServiceSender;
+    private final ModelMapper modelMapper;
 
-    public StudentServiceImpl(final StudentRepository studentRepository, ValidationServiceSender validationServiceSender, SearchServiceSender searchServiceSender) {
+    public StudentServiceImpl(final StudentRepository studentRepository, ValidationServiceSender validationServiceSender,
+                              SearchServiceSender searchServiceSender, ModelMapper modelMapper) {
         this.studentRepository = studentRepository;
         this.validationServiceSender = validationServiceSender;
         this.searchServiceSender = searchServiceSender;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -69,7 +73,7 @@ public class StudentServiceImpl implements StudentService {
         //add metadata obtained after save
         Student savedStudent = addMetadataToStudent(savedDetails);
         //send to validation
-        validationServiceSender.validate(StudentMapper.map(savedStudent, FullStudentMessage.class));
+        validationServiceSender.validate(modelMapper.map(savedStudent, FullStudentMessage.class));
         //send to search service
         indexStudent(OperationType.CREATE, savedStudent);
         return savedStudent;

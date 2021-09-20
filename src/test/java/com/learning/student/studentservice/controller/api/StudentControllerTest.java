@@ -6,6 +6,7 @@ import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.util.StudentTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,14 @@ class StudentControllerTest {
     private final Student expectedStudent = StudentTestData.getStudent();
 
     private StudentFacade studentFacade;
+    private ModelMapper modelMapper;
     private StudentApi studentController;
 
     @BeforeEach
     void setUp() {
         studentFacade = mock(StudentFacade.class);
-        studentController = new StudentController(studentFacade);
+        modelMapper = new ModelMapper();
+        studentController = new StudentController(studentFacade, modelMapper);
     }
 
     @Test

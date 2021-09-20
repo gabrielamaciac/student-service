@@ -7,6 +7,7 @@ import com.learning.student.studentservice.controller.model.Grade;
 import com.learning.student.studentservice.controller.model.Mark;
 import com.learning.student.studentservice.controller.model.Student;
 import com.learning.student.studentservice.integration.model.AddressMessage;
+import com.learning.student.studentservice.integration.model.FullStudentMessage;
 import com.learning.student.studentservice.integration.model.GradeMessage;
 import com.learning.student.studentservice.integration.model.MarkMessage;
 import com.learning.student.studentservice.integration.model.StudentMessage;
@@ -109,6 +110,13 @@ public class StudentTestData {
         Mark mark = new Mark(DATE_RECEIVED, 10.0);
         Grade grade = new Grade(TEST_SUBJECT, Collections.singletonList(mark));
         return new Student(STUDENT_ID, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_CNP, DATE_OF_BIRTH, address, Collections.singletonList(grade), true);
+    }
+
+    public static FullStudentMessage getFullStudentMessage() {
+        AddressMessage address = new AddressMessage(TEST_CITY, TEST_COUNTRY, TEST_NUMBER, TEST_STREET);
+        MarkMessage mark = new MarkMessage(DATE_RECEIVED, 10.0);
+        GradeMessage grade = new GradeMessage(TEST_SUBJECT, Collections.singletonList(mark));
+        return new FullStudentMessage(STUDENT_ID, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_CNP, DATE_OF_BIRTH, address, Collections.singletonList(grade));
     }
 
     public static SearchPayload getSearchPayload() {

@@ -3,8 +3,8 @@ package com.learning.student.studentservice.controller.api;
 import com.learning.student.studentservice.controller.model.Student;
 import com.learning.student.studentservice.facade.StudentFacade;
 import com.learning.student.studentservice.persistance.model.StudentEntity;
-import com.learning.student.studentservice.util.StudentMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -21,13 +21,16 @@ public class StudentController implements StudentApi {
 
     private final StudentFacade studentFacade;
 
-    public StudentController(final StudentFacade studentFacade) {
+    private final ModelMapper modelMapper;
+
+    public StudentController(final StudentFacade studentFacade, ModelMapper modelMapper) {
         this.studentFacade = studentFacade;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public ResponseEntity<Student> create(Student student) {
-        Student createdStudent = studentFacade.create(StudentMapper.map(student, StudentEntity.class));
+        Student createdStudent = studentFacade.create(modelMapper.map(student, StudentEntity.class));
         log.info("Student created with id: " + createdStudent.getId());
         // Add self link
         createdStudent.add(linkTo(StudentController.class)
@@ -65,7 +68,7 @@ public class StudentController implements StudentApi {
 
     @Override
     public ResponseEntity<Void> updateById(String id, Student student) {
-        studentFacade.update(id, StudentMapper.map(student, StudentEntity.class));
+        studentFacade.update(id, modelMapper.map(student, StudentEntity.class));
         log.info("Student with id " + id + " was updated.");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

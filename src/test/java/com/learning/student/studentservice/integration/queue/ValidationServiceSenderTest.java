@@ -1,7 +1,6 @@
 package com.learning.student.studentservice.integration.queue;
 
 import com.learning.student.studentservice.integration.model.FullStudentMessage;
-import com.learning.student.studentservice.util.StudentMapper;
 import com.learning.student.studentservice.util.StudentTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ class ValidationServiceSenderTest {
 
     @Test
     void studentIsConvertedAndSentToValidation() {
-        FullStudentMessage fullStudentMessage = StudentMapper.map(StudentTestData.getStudent(), FullStudentMessage.class);
+        FullStudentMessage fullStudentMessage = StudentTestData.getFullStudentMessage();
         validationServiceSender.validate(fullStudentMessage);
         verify(jsonRabbitTemplate).convertAndSend(null, null, fullStudentMessage);
     }

@@ -11,6 +11,7 @@ import com.learning.student.studentservice.util.StudentTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -41,13 +42,15 @@ class StudentServiceTest {
 
     private StudentRepository studentRepository;
     private StudentService studentService;
+    private ModelMapper modelMapper;
 
     @BeforeEach
     void setUp() {
         studentRepository = mock(StudentRepository.class);
         ValidationServiceSender validationServiceSender = mock(ValidationServiceSender.class);
         SearchServiceSender searchServiceSender = mock(SearchServiceSender.class);
-        studentService = new StudentServiceImpl(studentRepository, validationServiceSender, searchServiceSender);
+        modelMapper = new ModelMapper();
+        studentService = new StudentServiceImpl(studentRepository, validationServiceSender, searchServiceSender, modelMapper);
     }
 
     @Test

@@ -3,18 +3,12 @@ package com.learning.student.studentservice.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 
 @Slf4j
 public class StudentMapper {
-    private static final ModelMapper modelMapper = new ModelMapper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private StudentMapper() {
-    }
-
-    public static <T, O> T map(final O object, final Class<T> type) {
-        return modelMapper.map(object, type);
     }
 
     public static <T> String writeValue(final T object) {

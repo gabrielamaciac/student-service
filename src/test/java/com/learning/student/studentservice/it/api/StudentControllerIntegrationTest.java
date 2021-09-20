@@ -12,6 +12,7 @@ import com.learning.student.studentservice.util.StudentTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,11 +41,14 @@ class StudentControllerIntegrationTest {
     @Autowired
     private StudentFacade studentFacade;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     private MockMvc mvc;
 
     @BeforeEach
     void setUp() {
-        StudentApi studentController = new StudentController(studentFacade);
+        StudentApi studentController = new StudentController(studentFacade, modelMapper);
         mvc = MockMvcBuilders.standaloneSetup(studentController)
                 .setControllerAdvice(new NoSuchElementExceptionHandler(), new IllegalStateExceptionHandler())
                 .build();

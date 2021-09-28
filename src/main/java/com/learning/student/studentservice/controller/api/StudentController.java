@@ -44,7 +44,7 @@ public class StudentController implements StudentApi {
         List<Student> response = studentFacade.getAll(pageNo, pageSize);
         log.info(response.size() + " students found.");
         //Add self link to each student
-        response.stream().forEach(s -> s.add(linkTo(StudentController.class)
+        response.forEach(s -> s.add(linkTo(StudentController.class)
                 .slash(s.getId())
                 .withSelfRel()));
 

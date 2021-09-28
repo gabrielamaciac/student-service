@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -23,7 +24,7 @@ class StudentFacadeTest {
     private StudentFacade studentFacade;
 
     private Student expectedStudent = StudentTestData.getStudent();
-    private StudentEntity expectedStudentEntity = StudentTestData.getStudentEntity();
+    private StudentEntity expectedStudentEntity = StudentTestData.getStudentEntity(UUID.randomUUID().toString());
 
     @BeforeEach
     void setUp() {

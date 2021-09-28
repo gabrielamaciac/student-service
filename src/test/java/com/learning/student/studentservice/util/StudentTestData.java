@@ -91,11 +91,11 @@ public class StudentTestData {
         return new StudentDetailsEntity(STUDENT_UUID, STUDENT_JSON, false);
     }
 
-    public static StudentEntity getStudentEntity() {
+    public static StudentEntity getStudentEntity(String cnp) {
         AddressEntity address = new AddressEntity(TEST_CITY, TEST_COUNTRY, TEST_NUMBER, TEST_STREET);
         MarkEntity mark = new MarkEntity(DATE_RECEIVED, 10.0);
         GradeEntity grade = new GradeEntity(TEST_SUBJECT, Collections.singletonList(mark));
-        return new StudentEntity(TEST_FIRST_NAME, TEST_LAST_NAME, TEST_CNP, DATE_OF_BIRTH, address, Collections.singletonList(grade));
+        return new StudentEntity(TEST_FIRST_NAME, TEST_LAST_NAME, cnp, DATE_OF_BIRTH, address, Collections.singletonList(grade));
     }
 
     public static StudentMessage getStudentMessage() {

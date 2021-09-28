@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 class StudentServiceTest {
 
     private final StudentDetailsEntity studentDetailsEntity = StudentTestData.getStudentDetailsEntity();
-    private final StudentEntity studentEntity = StudentTestData.getStudentEntity();
+    private final StudentEntity studentEntity = StudentTestData.getStudentEntity(UUID.randomUUID().toString());
     private final Student studentFromJson = StudentTestData.getStudentFromJson();
 
     private StudentRepository studentRepository;
@@ -112,7 +112,7 @@ class StudentServiceTest {
     @Test
     void createStudentThrowsException() {
         // Given
-        when(studentRepository.findByCnp(StudentTestData.TEST_CNP)).thenReturn(Collections.singletonList(studentDetailsEntity));
+        when(studentRepository.findByCnp(any(String.class))).thenReturn(Collections.singletonList(studentDetailsEntity));
 
         // Then
         assertThrows(IllegalStateException.class, () -> studentService.create(studentEntity));

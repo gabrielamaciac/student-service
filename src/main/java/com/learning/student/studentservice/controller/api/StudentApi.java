@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import javax.validation.constraints.NotBlank;
 
 @Tag(name = "Student Service", description = "The student service API with CRUD operations.")
 @RequestMapping("/student")
+@Validated
 public interface StudentApi {
     @Operation(summary = "Create a student.")
     @ApiResponses(value = {
@@ -33,7 +35,9 @@ public interface StudentApi {
             @ApiResponse(responseCode = "404", description = "Bad request", content = @Content),
             @ApiResponse(responseCode = "409", description = "Student already exists.", content = @Content)})
     @PostMapping("")
-    ResponseEntity<Student> create(@Parameter(description = "student object to be created") @RequestBody @Valid Student student);
+    ResponseEntity<Student> create(@Parameter(description = "student object to be created")
+                                   @Valid
+                                   @RequestBody Student student);
 
     @Operation(summary = "Get all students.")
     @ApiResponses(value = {
@@ -53,7 +57,9 @@ public interface StudentApi {
             @ApiResponse(responseCode = "404", description = "Student not found",
                     content = @Content)})
     @GetMapping("/{id}")
-    ResponseEntity<Student> getById(@Parameter(description = "id of student to be searched") @PathVariable @NotBlank String id);
+    ResponseEntity<Student> getById(@Parameter(description = "id of student to be searched")
+                                    @PathVariable
+                                    @NotBlank String id);
 
     @Operation(summary = "Update a student by id.")
     @ApiResponses(value = {
@@ -61,13 +67,16 @@ public interface StudentApi {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = Student.class))}),
             @ApiResponse(responseCode = "404", description = "No student exists with given id.", content = @Content)})
     @PutMapping("/{id}")
-    ResponseEntity<Void> updateById(@Parameter(description = "id of student to be updated") @PathVariable @NotBlank String id,
-                                    @RequestBody @Valid Student student);
+    ResponseEntity<Void> updateById(@Parameter(description = "id of student to be updated")
+                                    @PathVariable String id,
+                                    @RequestBody
+                                    @Valid Student student);
 
     @Operation(summary = "Delete a student by id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Student deleted."),
             @ApiResponse(responseCode = "404", description = "No student exists with the given id.", content = @Content)})
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteById(@Parameter(description = "id of student to be deleted") @PathVariable @NotBlank String id);
+    ResponseEntity<Void> deleteById(@Parameter(description = "id of student to be deleted")
+                                    @PathVariable String id);
 }

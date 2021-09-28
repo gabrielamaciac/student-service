@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -30,7 +32,7 @@ class StudentQueueConsumerTest {
     @Test
     void processMessageIsSuccessful() {
         // given
-        StudentEntity studentEntity = StudentTestData.getStudentEntity();
+        StudentEntity studentEntity = StudentTestData.getStudentEntity(UUID.randomUUID().toString());
         when(modelMapper.map(any(StudentMessage.class), eq(StudentEntity.class))).thenReturn(studentEntity);
 
         // when

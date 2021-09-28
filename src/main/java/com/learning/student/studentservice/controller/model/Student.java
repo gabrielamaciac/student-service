@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class Student extends RepresentationModel<Student> {
     @NotBlank
     private String cnp;
     private String dateOfBirth;
+    @Valid
     private Address address;
     private List<Grade> grades;
     private boolean isValid;

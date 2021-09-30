@@ -1,59 +1,67 @@
-package com.learning.student.studentservice.it.api.testcontainers;
+package com.learning.student.studentservice.it.api;
 
 import com.learning.student.studentservice.StudentServiceApplication;
 import com.learning.student.studentservice.controller.api.StudentApi;
-import com.learning.student.studentservice.controller.api.StudentController;
 import com.learning.student.studentservice.controller.model.Student;
-import com.learning.student.studentservice.exception.IllegalStateExceptionHandler;
-import com.learning.student.studentservice.exception.NoSuchElementExceptionHandler;
+import com.learning.student.studentservice.exception.ServiceExceptionHandler;
 import com.learning.student.studentservice.facade.StudentFacade;
 import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.util.StudentTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("test")
+/**
+ * Integration test for Student API.
+ * ---------------------------------
+ * It connects to a postgres and rabbitmq test containers in Docker
+ */
+//@ActiveProfiles("test")
+@TestPropertySource("classpath:application-test.yaml")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = StudentServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(initializers = {StudentServiceApiTest.RabbitMqContextInitializer.class})
 class StudentServiceApiTest extends ContainersEnvironment {
 
     @Autowired
     private StudentFacade studentFacade;
     @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private StudentApi studentController;
 
     private MockMvc mvc;
 
     @BeforeEach
     void setUp() {
-        StudentApi studentController = new StudentController(studentFacade, modelMapper);
         mvc = MockMvcBuilders.standaloneSetup(studentController)
-                .setControllerAdvice(new NoSuchElementExceptionHandler(), new IllegalStateExceptionHandler())
+                .setControllerAdvice(new ServiceExceptionHandler())
                 .build();
     }
 
@@ -147,7 +155,17 @@ class StudentServiceApiTest extends ContainersEnvironment {
         mvc.perform(delete("/student/" + createdStudent.getId()))
                 .andExpect(status().isNoContent());
 
-        // 3. Get the student by id and expect null
-        assertNull(studentFacade.getById(createdStudent.getId()));
+        // 3. Get the student by id and expect not found
+        String id = createdStudent.getId();
+        assertThrows(NoSuchElementException.class, () -> studentFacade.getById(id));
+    }
+
+    static class RabbitMqContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+        @Override
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues.of("spring.rabbitmq.port=" + rabbitMQContainer.getMappedPort(5672))
+                    .applyTo(configurableApplicationContext.getEnvironment());
+        }
     }
 }

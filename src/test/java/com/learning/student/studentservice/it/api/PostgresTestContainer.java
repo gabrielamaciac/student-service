@@ -1,4 +1,4 @@
-package com.learning.student.studentservice.it.api.testcontainers;
+package com.learning.student.studentservice.it.api;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 

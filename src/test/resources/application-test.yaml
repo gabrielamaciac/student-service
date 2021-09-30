@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  rabbitmq:
+    exchange: amq.direct
+    studentqueue: student-queue
+    validationqueue: validation-queue
+    studentrouting: student-routing-key
+    validationrouting: validation-routing-key
+    responsequeue: validation-response-queue
+    responserouting: validation-response-key
+    searchqueue: search-queue
+    searchrouting: search-routing

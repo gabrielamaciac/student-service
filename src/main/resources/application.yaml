@@ -28,3 +28,15 @@ spring:
     responserouting: validation-response-key
     searchqueue: search-queue
     searchrouting: search-routing
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8180/auth/realms/StudentRealm
+#        jwk-set-uri: http://localhost:8180/auth/realms/softvision/protocol/openid-connect/certs
+#keycloak:
+#  auth-server-url: http://localhost:8180/auth
+#  realm: StudentRealm
+#  resource: login-app
+#  public-client: false
+#  principal-attribute: preffered_username

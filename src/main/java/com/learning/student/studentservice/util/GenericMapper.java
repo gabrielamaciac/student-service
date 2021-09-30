@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StudentMapper {
+public class GenericMapper {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private StudentMapper() {
+    private GenericMapper() {
     }
 
     public static <T> String writeValue(final T object) {

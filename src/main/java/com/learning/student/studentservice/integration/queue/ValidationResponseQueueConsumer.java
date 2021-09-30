@@ -2,7 +2,7 @@ package com.learning.student.studentservice.integration.queue;
 
 import com.learning.student.studentservice.integration.model.ValidationResponse;
 import com.learning.student.studentservice.service.StudentService;
-import com.learning.student.studentservice.util.StudentMapper;
+import com.learning.student.studentservice.util.GenericMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ValidationResponseQueueConsumer {
 
     private void processMessage(String message) {
         log.info("Processing message: " + message);
-        ValidationResponse validationResponse = StudentMapper.readValue(message, ValidationResponse.class);
+        ValidationResponse validationResponse = GenericMapper.readValue(message, ValidationResponse.class);
         log.info("ValidationResponse received: isValid " + validationResponse.isValid());
         if (validationResponse.isValid()) {
             studentService.updateIsValidFlag(validationResponse.getStudentId(), validationResponse.isValid());

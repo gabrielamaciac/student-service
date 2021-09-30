@@ -3,7 +3,7 @@ package com.learning.student.studentservice.integration.queue;
 import com.learning.student.studentservice.integration.model.StudentMessage;
 import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.service.StudentService;
-import com.learning.student.studentservice.util.StudentMapper;
+import com.learning.student.studentservice.util.GenericMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -34,7 +34,7 @@ public class StudentQueueConsumer {
 
     private void processMessage(String message) {
         log.info("Processing message: " + message);
-        StudentMessage studentMessage = StudentMapper.readValue(message, StudentMessage.class);
+        StudentMessage studentMessage = GenericMapper.readValue(message, StudentMessage.class);
         StudentEntity studentEntity = modelMapper.map(studentMessage, StudentEntity.class);
         if (!Objects.isNull(studentEntity)) {
             studentService.create(studentEntity);

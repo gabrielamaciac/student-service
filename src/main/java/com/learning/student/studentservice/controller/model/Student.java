@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -18,14 +17,11 @@ import java.util.List;
 @EqualsAndHashCode
 public class Student extends RepresentationModel<Student> {
     private String id;
-    @NotBlank
     private String firstName;
-    @NotBlank
     private String lastName;
     @NotBlank
     private String cnp;
     private String dateOfBirth;
-    @Valid
     private Address address;
     private List<Grade> grades;
     private boolean isValid;

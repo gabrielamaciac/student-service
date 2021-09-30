@@ -11,9 +11,11 @@ import com.learning.student.studentservice.persistance.model.StudentDetailsEntit
 import com.learning.student.studentservice.persistance.model.StudentEntity;
 import com.learning.student.studentservice.persistance.repository.StudentRepository;
 import com.learning.student.studentservice.service.StudentService;
-import com.learning.student.studentservice.util.StudentMapper;
+import com.learning.student.studentservice.util.GenericMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Cacheable(cacheNames = "student", key = "#id")
     public Student getById(String id) {
         Optional<StudentDetailsEntity> studentDetailsEntity = studentRepository.findById(UUID.fromString(id));
         return studentDetailsEntity.map(this::addMetadataToStudent)
@@ -50,6 +53,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Cacheable(cacheNames = "students")
     public List<Student> getAll(int pageNo, int pageSize) {
         Page<StudentDetailsEntity> pagedResult = studentRepository.findAll(PageRequest.of(pageNo, pageSize));
         return pagedResult.toList().stream()
@@ -66,7 +70,7 @@ public class StudentServiceImpl implements StudentService {
         }
         // create the new student
         StudentDetailsEntity studentDetailsEntity = new StudentDetailsEntity();
-        studentDetailsEntity.setStudentJson(StudentMapper.writeValue(studentEntity));
+        studentDetailsEntity.setStudentJson(GenericMapper.writeValue(studentEntity));
         studentDetailsEntity.setValid(false);
         //save the student
         StudentDetailsEntity savedDetails = studentRepository.save(studentDetailsEntity);
@@ -80,11 +84,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @CacheEvict(value = "student", key = "#id")
     public void update(String id, StudentEntity studentEntity) {
         Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
         if (studentDetails.isPresent()) {
             StudentDetailsEntity existingStudent = studentDetails.get();
-            String newStudent = StudentMapper.writeValue(studentEntity);
+            String newStudent = GenericMapper.writeValue(studentEntity);
             existingStudent.setStudentJson(newStudent);
             // update the student from the db
             StudentDetailsEntity savedEntity = studentRepository.save(existingStudent);
@@ -97,13 +102,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @CacheEvict(value = "student", key = "#id")
     public void delete(String id) {
         Optional<StudentDetailsEntity> studentDetails = studentRepository.findById(UUID.fromString(id));
         if (studentDetails.isPresent()) {
             // delete from DB
             studentRepository.delete(studentDetails.get());
             // delete from solr
-            Student studentToDelete = StudentMapper.readValue(studentDetails.get().getStudentJson(), Student.class);
+            Student studentToDelete = GenericMapper.readValue(studentDetails.get().getStudentJson(), Student.class);
             indexStudent(OperationType.DELETE, Objects.requireNonNull(studentToDelete));
         } else {
             throw new NoSuchElementException("No student found with the given id.");
@@ -127,7 +133,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private Student addMetadataToStudent(StudentDetailsEntity studentDetailsEntity) {
-        Student student = StudentMapper.readValue(studentDetailsEntity.getStudentJson(), Student.class);
+        Student student = GenericMapper.readValue(studentDetailsEntity.getStudentJson(), Student.class);
         student.setId(studentDetailsEntity.getId().toString());
         student.setValid(studentDetailsEntity.isValid());
         return student;
